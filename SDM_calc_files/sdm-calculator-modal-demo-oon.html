@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDM Cost Page — Modal Calculator Integration Demo (Out-of-Network Only)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #E8EAF6; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    /* ══════════════════════════════════════════════════════════════════════
+       INTEGRATION DEMO — constrained production page + modal calculator
+
+       Constraint: the existing SDM results page cannot be redesigned or
+       rebuilt. This demo shows the two permitted insertions:
+         1. The page-level Price Percentile slider in the header (approved).
+         2. One compact "Calculator" trigger per line item (approved).
+       Everything else in the list mimics the production layout and is meant
+       to be left as-is; the calculator itself lives entirely inside a modal.
+
+       Column terminology (org-wide): "Provider Billed Charge" and
+       "In-Network Allowed Amount" (plus "Medicare Price"), used in the header
+       column cells, the sticky total bar, and the modal. Scenario language
+       ("If this item is Out of Network") describes a circumstance, not a
+       column, so it keeps the out-of-network wording.
+
+       Header column cells: each label carries a "?" help button that opens a
+       click-to-open popover (dark purple #3C3489, white text) — never a
+       native hover tooltip, so it works on touch. One open at a time; Escape
+       or a click outside closes it and Escape returns focus to the button.
+
+       Modal contract (for dev handoff):
+       - Stateless what-if tool: opens at the page's current percentile with
+         default reimbursement rates each time; closing discards everything.
+         It never writes back to the page.
+       - Inputs per item: name, description, CPT, and billed price curves by
+         percentile. (In this variant the modal does not use allowed or
+         Medicare prices; the page still does.)
+       - Accessibility: role="dialog", aria-modal, labelled by its title,
+         focus moves into the dialog on open, Tab is trapped, Escape and
+         scrim-click close, focus returns to the triggering button, body
+         scroll is locked while open.
+       - Items with no benchmark prices (e.g. an N/A facility row) simply get
+         no trigger.
+
+       VARIANT — OUT-OF-NETWORK ONLY: the modal shows a single reimbursement
+       scenario (Out of Network: plan pays X% of UCR/billed). The In-Network
+       scenario card and the in-network allowed price cell are removed
+       entirely, not hidden. Everything else —
+       page, triggers, billed price cell, percentile section, caveat — matches the
+       two-scenario demo.
+       ══════════════════════════════════════════════════════════════════════ */
+    const { useState, useRef, useEffect, createElement: h, Fragment } = React;
+
+    const ChevronDown = ({ size, color, style }) =>
+      h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', style }, h('polyline', { points: '6 9 12 15 18 9' }));
+    const XIcon = ({ size, color }) =>
+      h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2.5, strokeLinecap: 'round' }, h('line', { x1: 18, y1: 6, x2: 6, y2: 18 }), h('line', { x1: 6, y1: 6, x2: 18, y2: 18 }));
+    const RefreshIcon = ({ size, color }) =>
+      h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' },
+        h('polyline', { points: '23 4 23 10 17 10' }), h('path', { d: 'M20.49 15a9 9 0 1 1-2.12-9.36L23 10' }));
+    const PrintIcon = ({ size, color }) =>
+      h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' },
+        h('polyline', { points: '6 9 6 2 18 2 18 9' }), h('path', { d: 'M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2' }), h('rect', { x: 6, y: 14, width: 12, height: 8 }));
+    const CalcIcon = ({ size, color }) =>
+      h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' },
+        h('rect', { x: 4, y: 2, width: 16, height: 20, rx: 2 }), h('line', { x1: 8, y1: 6, x2: 16, y2: 6 }),
+        h('line', { x1: 8, y1: 11, x2: 8, y2: 11.01 }), h('line', { x1: 12, y1: 11, x2: 12, y2: 11.01 }), h('line', { x1: 16, y1: 11, x2: 16, y2: 11.01 }),
+        h('line', { x1: 8, y1: 15, x2: 8, y2: 15.01 }), h('line', { x1: 12, y1: 15, x2: 12, y2: 15.01 }), h('line', { x1: 16, y1: 15, x2: 16, y2: 18 }));
+
+    const C = {
+      purple: '#3C3489', purpleTint: '#EDE9F5', purpleDeep: '#2A2566',
+      teal: '#0891B2', terra: '#D14A2D',
+      green: '#488A3A',
+      ink: '#1F2330', inkSoft: '#5A5F73', line: '#D8DAE8',
+      inn: '#D14A2D', oon: '#007CA3', oonTint: '#E3F1F6',
+    };
+    const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US');
+    const fmtN = (n) => (n == null ? 'N/A' : fmt(n));
+
+    /* ── Demo data (same generated curves as the standalone build) ── */
+    const PCTS = [20, 30, 40, 50, 60, 70, 80, 90];
+    const SHAPE = { 20: 0.532, 30: 0.703, 40: 0.876, 50: 0.959, 60: 1.000, 70: 1.105, 80: 1.267, 90: 1.519 };
+    const curve = (v60) => Object.fromEntries(PCTS.map(p => [p, Math.round(v60 * SHAPE[p])]));
+    const mk = (id, name, desc, cpt, b60, a60, med) =>
+      ({ id, name, desc, cpt, billedByPct: b60 != null ? curve(b60) : null, allowedByPct: a60 != null ? curve(a60) : null, medicare: med });
+
+    const SECTIONS = [
+      { title: 'Primary Medical Procedure', items: [
+        mk('primary', 'Medical Procedure', 'Prostatectomy, retropubic radical, with or without nerve sparing; with bilateral pelvic lymphadenectomy, including external iliac, hypogastric, and obturator nodes', '55845', 14084, 4295, 1370),
+      ]},
+      { title: 'Facility Costs', items: [
+        mk('asc', 'Ambulatory Surgical Center (ASC)', 'Prostatectomy, retropubic radical, with or without nerve sparing; with bilateral pelvic lymphadenectomy', '55845', null, null, null),
+        mk('hosp', 'Hospital (Outpatient)', 'Prostatectomy, retropubic radical, with or without nerve sparing; with bilateral pelvic lymphadenectomy', '55845', 71285, 33661, null),
+      ]},
+      { title: null, items: [
+        mk('anes', 'Anesthesia', 'Anesthesia for extraperitoneal procedures in lower abdomen, including urinary tract; radical prostatectomy (suprapubic, retropubic)', '00865', 6085, 3304, null),
+        mk('ct', 'CT Scan and CT Guidance Procedures', 'Ex. CT Guidance for Placement of Radiation Fields', null, 2518, 1406, 41),
+        mk('docs', 'Doctor / Healthcare Professional Visits', 'Ex. Office, Outpatient, Inpatient, Home Care', null, 5647, 3561, 850),
+        mk('drugs', 'Drugs Used for Anesthesia or Pain Management', 'Ex. Propofol (Diprivan), Hydromorphone (Dilaudid)', null, 427, 36, 0),
+        mk('labB', 'Laboratory Tests - Requiring a Blood Specimen', 'Ex. Complete Blood Count, Cholesterol Test', null, 3918, 923, 419),
+        mk('labO', 'Laboratory Tests - Requiring a Non-blood Specimen', 'Ex. Urine, Feces', null, 493, 33, 5),
+        mk('medT', 'Medical Tests/Exams', 'Ex. Allergy Tests, Holter Monitor, Preventive Care', null, 1120, 556, 179),
+      ]},
+    ];
+    const ALL_ITEMS = SECTIONS.flatMap(s => s.items);
+
+    /* ── Page-level percentile slider (the one approved header addition) ── */
+    function PercentileSlider({ value, onChange }) {
+      const ref = useRef(null);
+      const [drag, setDrag] = useState(false);
+      const pos = (p) => (PCTS.indexOf(p) / (PCTS.length - 1)) * 100;
+      const fromPos = (pct) => PCTS[Math.max(0, Math.min(PCTS.length - 1, Math.round((pct / 100) * (PCTS.length - 1))))];
+      const interact = (x) => {
+        if (!ref.current) return;
+        const r = ref.current.getBoundingClientRect();
+        onChange(fromPos(Math.max(0, Math.min(100, ((x - r.left) / r.width) * 100))));
+      };
+      useEffect(() => {
+        if (!drag) return;
+        const mm = (e) => interact(e.clientX), tm = (e) => interact(e.touches[0].clientX), end = () => setDrag(false);
+        window.addEventListener('mousemove', mm); window.addEventListener('mouseup', end);
+        window.addEventListener('touchmove', tm); window.addEventListener('touchend', end);
+        return () => { window.removeEventListener('mousemove', mm); window.removeEventListener('mouseup', end); window.removeEventListener('touchmove', tm); window.removeEventListener('touchend', end); };
+      }, [drag]);
+      return h('div', null,
+        h('div', { style: { fontSize: 13, fontWeight: 700, marginBottom: 5, color: C.ink } }, 'Price Percentile'),
+        h('div', { ref, role: 'slider', tabIndex: 0, 'aria-valuemin': PCTS[0], 'aria-valuemax': PCTS[PCTS.length - 1], 'aria-valuenow': value, 'aria-valuetext': value + 'th percentile', 'aria-label': 'Price Percentile',
+          onMouseDown: (e) => { setDrag(true); interact(e.clientX); },
+          onTouchStart: (e) => { setDrag(true); interact(e.touches[0].clientX); },
+          onKeyDown: (e) => {
+            const i = PCTS.indexOf(value);
+            if ((e.key === 'ArrowRight' || e.key === 'ArrowUp') && i < PCTS.length - 1) { e.preventDefault(); onChange(PCTS[i + 1]); }
+            if ((e.key === 'ArrowLeft' || e.key === 'ArrowDown') && i > 0) { e.preventDefault(); onChange(PCTS[i - 1]); }
+          },
+          style: { position: 'relative', height: 30, cursor: 'pointer', marginBottom: 2 } },
+          h('div', { style: { position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', height: 10, background: '#D1D5DB', borderRadius: 5 } }),
+          h('div', { style: { position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', height: 10, width: pos(value) + '%', background: C.purple, borderRadius: 5 } }),
+          h('div', { style: { position: 'absolute', left: pos(value) + '%', top: '50%', transform: 'translate(-50%,-50%)', background: '#fff', border: '3px solid ' + C.purple, borderRadius: 4, padding: '2px 8px', fontSize: 14, fontWeight: 800, color: C.ink, whiteSpace: 'nowrap', boxShadow: '0 2px 4px rgba(0,0,0,0.15)', cursor: drag ? 'grabbing' : 'grab', zIndex: 2 } }, value + 'th')),
+        h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '0 2px' } },
+          ...PCTS.map(p => h('button', { key: p, type: 'button', onClick: () => onChange(p), 'aria-label': p + 'th percentile',
+            style: { background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: FONT } },
+            h('span', { style: { fontSize: 10.5, fontWeight: 600, color: C.ink, padding: '1px 4px', background: p === value ? '#FFEB99' : 'transparent', borderRadius: 3 } }, p + 'th')))));
+    }
+
+    /* ── Production-style price box (rounded, matching the existing page) ── */
+    const prodBox = (val, kind, na) => {
+      const s = {
+        billed: na ? { background: '#fff', color: '#9CCFDD', border: '1px solid #C7E4EC' } : { background: C.teal, color: '#fff', border: '1px solid ' + C.teal },
+        allowed: na ? { background: '#fff', color: '#E8B4A6', border: '1px solid #F2D5CC' } : { background: C.inn, color: '#fff', border: '1px solid ' + C.inn },
+        medicare: na ? { background: '#fff', color: '#B9BCD1', border: '1px solid ' + C.line } : { background: '#fff', color: C.purple, border: '1.5px solid ' + C.purple },
+      }[kind];
+      return h('div', { style: { width: 130, textAlign: 'center', padding: '10px 8px', fontSize: 15, fontWeight: 800, borderRadius: 6, fontVariantNumeric: 'tabular-nums', ...s } }, val);
+    };
+
+    /* ── Header column cells with "?" help popovers ── */
+    const HELP = [
+      { key: 'billed', kind: 'billed', title: 'Provider Billed Charge', lines: ['Provider Billed', 'Charge'],
+        body: 'What local providers may charge. The 50th percentile means that 50% of the provider charges in our database are lower than or equal to this amount. It also means that 50% of the provider charges are higher than or equal to this amount. Slide to see lower or higher estimates. If you are uninsured or out-of-network, you may have to pay some or all of the provider\u2019s charge.' },
+      { key: 'allowed', kind: 'allowed', title: 'In-Network Allowed Amount', lines: ['In-Network', 'Allowed Amount'],
+        body: 'What health plans may pay providers in the plan network. The 50th percentile means 50% of the in-network allowed amounts in our database are lower than or equal to this amount. It also means that 50% of the in-network allowed amounts in our database are higher than or equal to this amount. Slide to see lower or higher estimates. If you have not met your deductible, you may have to pay the full amount. If you have met your deductible, you may only have to pay a copay or coinsurance.' },
+      { key: 'medicare', kind: 'medicare', title: 'Medicare Price', lines: ['Medicare Price'],
+        body: 'This is the amount that Original Medicare allows for this service in this geographic region. This does not reflect rates paid by Medicare Advantage, commercial or Medicaid plans. Patients are responsible for deductibles, coinsurance and copays unless they have a Medigap or other policy that covers the balance.' },
+    ];
+
+    function HeaderCell({ cfg, open, onToggle }) {
+      const cell = {
+        billed: { background: C.teal, color: '#fff', border: '1.5px solid ' + C.teal },
+        allowed: { background: C.inn, color: '#fff', border: '1.5px solid ' + C.inn },
+        medicare: { background: '#fff', color: C.purple, border: '1.5px solid ' + C.purple },
+      }[cfg.kind];
+      const dot = cfg.kind === 'medicare'
+        ? { background: C.purple, color: '#fff' }
+        : { background: '#fff', color: cfg.kind === 'billed' ? C.teal : C.inn };
+      const popId = 'help-pop-' + cfg.key;
+      const qBtn = h('button', { id: 'help-btn-' + cfg.key, type: 'button', onClick: onToggle,
+          'aria-expanded': open, 'aria-controls': popId, 'aria-label': 'What is ' + cfg.title + '?',
+          style: { display: 'inline-grid', placeItems: 'center', width: 22, height: 22, verticalAlign: 'middle', marginLeft: 2, marginTop: -3, padding: 0, background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT } },
+        h('span', { 'aria-hidden': 'true', style: { display: 'grid', placeItems: 'center', width: 16, height: 16, borderRadius: 999, fontSize: 11, fontWeight: 800, lineHeight: 1, ...dot } }, '?'));
+      return h('div', { 'data-help': '', style: { position: 'relative', width: 130, flexShrink: 0 } },
+        h('div', { style: { minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '5px 4px', fontSize: 12.5, fontWeight: 800, lineHeight: 1.25, ...cell } },
+          h('div', null, ...cfg.lines.map((ln, i) => h('div', { key: i, style: { whiteSpace: 'nowrap' } }, ln, i === 0 && qBtn)))),
+        open && h('div', { id: popId, style: { position: 'absolute', top: 'calc(100% + 10px)', right: 0, width: 300, maxWidth: 'calc(100vw - 32px)', background: C.purple, color: '#fff', borderRadius: 6, padding: '12px 14px 14px', boxShadow: '0 8px 24px rgba(31,35,48,0.28)', zIndex: 60, textAlign: 'left' } },
+          h('div', { 'aria-hidden': 'true', style: { position: 'absolute', top: -6, right: 20, width: 12, height: 12, background: C.purple, transform: 'rotate(45deg)' } }),
+          h('div', { style: { position: 'relative', fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 } }, cfg.title),
+          h('div', { style: { position: 'relative', fontSize: 13, lineHeight: 1.5, fontWeight: 400 } }, cfg.body)));
+    }
+
+    /* ══════════ The modal calculator (self-contained what-if tool) ══════════ */
+    function CalculatorModal({ item, pagePct, onClose }) {
+      // Stateless per open: local percentile starts at the page setting.
+      const [pct, setPct] = useState(pagePct);
+      const [rates, setRates] = useState({ oon: 70 });
+      const [ucrOpen, setUcrOpen] = useState(false);
+      const dialogRef = useRef(null);
+
+      // Focus management: move focus in on open; trap Tab; restore on close
+      // (restore handled by the opener storing the trigger element).
+      useEffect(() => {
+        const el = dialogRef.current;
+        if (el) el.focus();
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = ''; };
+      }, []);
+      const onKeyDown = (e) => {
+        if (e.key === 'Escape') { e.stopPropagation(); onClose(); return; }
+        if (e.key !== 'Tab') return;
+        const focusables = dialogRef.current.querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])');
+        if (!focusables.length) return;
+        const first = focusables[0], last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      };
+
+      const billed = item.billedByPct[pct];
+      const diverged = pct !== pagePct;
+      const atMin = PCTS.indexOf(pct) === 0, atMax = PCTS.indexOf(pct) === PCTS.length - 1;
+      const payOon = billed * (rates.oon / 100), oopOon = Math.max(0, billed - payOon);
+      const stepPct = (dir) => setPct(p => PCTS[Math.max(0, Math.min(PCTS.length - 1, PCTS.indexOf(p) + dir))]);
+      const stepRate = (which, dir) => setRates(r => ({ ...r, [which]: Math.max(0, Math.min(100, r[which] + dir * 5)) }));
+
+      const darkBtn = (onClick, disabled, label, txt, size) =>
+        h('button', { onClick, disabled, 'aria-label': label,
+          style: { width: size || 36, height: size || 36, display: 'grid', placeItems: 'center', fontSize: 17, fontWeight: 800, color: '#fff', background: disabled ? '#B9BCD1' : C.purpleDeep, border: 'none', cursor: disabled ? 'default' : 'pointer', fontFamily: FONT } }, txt);
+      const rLine = (label, q, val, opts = {}) =>
+        h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, padding: '4px 0' } },
+          h('span', { style: { fontSize: opts.total ? 14 : 13, fontWeight: opts.total ? 800 : 500, color: opts.total ? C.ink : C.inkSoft, lineHeight: 1.4 } }, label,
+            q && h('span', { style: { fontSize: 11, color: C.inkSoft, fontWeight: 500 } }, ' ' + q)),
+          h('span', { 'aria-live': 'polite', style: { fontSize: opts.total ? 22 : 15, fontWeight: opts.total ? 800 : 700, color: opts.color || C.ink, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' } }, val));
+      const priceCell = (label, val, kind) => {
+        const s = { billed: { background: C.teal, color: '#fff' }, }[kind];
+        return h('div', { style: { flex: 1, minWidth: 140, padding: '8px 10px', border: '1px solid transparent', ...s } },
+          h('div', { style: { fontSize: 11, lineHeight: 1.3 } }, label),
+          h('div', { style: { fontSize: 17, fontWeight: 800, marginTop: 2, fontVariantNumeric: 'tabular-nums' } }, val));
+      };
+      const stepper = (valTxt, dec, inc, decDis, incDis, boxStyle, labelBase) =>
+        h('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+          darkBtn(dec, decDis, 'Lower ' + labelBase, '\u2212'),
+          h('div', { 'aria-live': 'polite', style: { minWidth: 84, textAlign: 'center', padding: '7px 12px', fontSize: 14, fontWeight: 800, color: C.ink, background: '#fff', border: '1px solid ' + C.line, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', ...boxStyle } }, valTxt),
+          darkBtn(inc, incDis, 'Raise ' + labelBase, '+'));
+      const scenarioCard = (title, accent, children) =>
+        h('div', { style: { flex: '1 1 260px', minWidth: 250, border: '1px solid ' + C.line, borderTop: '4px solid ' + accent, padding: '14px 16px' } },
+          h('div', { style: { fontSize: 13, fontWeight: 700, color: C.ink } }, title), ...children);
+
+      return h('div', { onMouseDown: (e) => { if (e.target === e.currentTarget) onClose(); }, onKeyDown,
+        style: { position: 'fixed', inset: 0, background: 'rgba(31,35,48,0.55)', zIndex: 100, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '4vh 16px', overflowY: 'auto' } },
+        h('div', { ref: dialogRef, role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'calc-title', tabIndex: -1,
+          style: { background: '#fff', width: '100%', maxWidth: 680, padding: '18px 22px 22px', boxShadow: '0 12px 40px rgba(31,35,48,0.35)', outline: 'none', fontFamily: FONT, color: C.ink } },
+
+          // Header: title + close
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 } },
+            h('div', { id: 'calc-title', style: { fontSize: 16, fontWeight: 800 } }, 'Typical Out-of-Pocket Cost Calculator'),
+            h('button', { onClick: onClose, 'aria-label': 'Close the calculator',
+              style: { flexShrink: 0, width: 36, height: 36, display: 'grid', placeItems: 'center', background: 'none', border: 'none', borderRadius: 999, cursor: 'pointer' } }, h(XIcon, { size: 18, color: C.inkSoft }))),
+          h('div', { style: { marginTop: 6 } },
+            h('div', { style: { fontSize: 14, fontWeight: 700 } }, item.name),
+            h('div', { style: { fontSize: 12, color: C.inkSoft, marginTop: 2 } }, item.desc + (item.cpt ? ' \u00b7 CPT ' + item.cpt : ''))),
+
+          // Reference prices at the calculator's current percentile
+          h('div', { style: { display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' } },
+            priceCell('Provider Billed Charge', fmt(billed), 'billed')),
+          h('div', { style: { fontSize: 11, color: C.ink, marginTop: 8 } }, 'Billed = full price before discount'),
+
+          h('div', { style: { borderTop: '1px solid ' + C.line, margin: '14px 0' } }),
+
+          // What-if percentile (local to this calculator; never changes the page)
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' } },
+            h('div', { style: { flex: '1 1 240px' } },
+              h('div', { style: { fontSize: 13, fontWeight: 700 } }, 'Provider Price Percentile'),
+              diverged
+                ? h('div', { style: { fontSize: 11.5, marginTop: 2 } },
+                    h('span', { style: { fontWeight: 700, color: C.oon } }, 'Set for this estimate only'),
+                    h('span', { style: { color: C.inkSoft } }, ' \u00b7 page is at ' + pagePct + 'th'))
+                : h('div', { style: { fontSize: 11.5, color: C.inkSoft, marginTop: 2 } }, 'Matching the page setting'),
+              !diverged && h('div', { style: { fontSize: 11.5, color: C.ink, lineHeight: 1.5, marginTop: 6, maxWidth: 400 } },
+                'Some providers charge more than others \u2014 the ' + pct + 'th level means pricier than ' + pct + '% of nearby providers. Adjust it here if you expect this provider to differ.')),
+            h('div', { style: { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' } },
+              stepper(pct + 'th percentile', () => stepPct(-1), () => stepPct(1), atMin, atMax,
+                diverged ? { background: C.oonTint, border: '1px solid ' + C.oon } : { background: '#FFEB99', border: '1px solid #D9BE4F' },
+                'percentile for this estimate'),
+              diverged && h('button', { onClick: () => setPct(pagePct), 'aria-label': 'Reset to the page percentile',
+                style: { fontSize: 12, fontWeight: 700, color: C.purple, background: '#fff', border: '1.5px solid ' + C.purple, borderRadius: 999, padding: '7px 14px', minHeight: 36, cursor: 'pointer', fontFamily: FONT } }, 'Reset to page setting (' + pagePct + 'th)'))),
+
+          h('div', { style: { borderTop: '1px solid ' + C.line, margin: '14px 0 16px' } }),
+
+          // Out-of-network reimbursement scenario (only scenario in this variant)
+          h('div', { style: { fontSize: 13.5, fontWeight: 800, marginBottom: 12 } }, 'Out-of-Network Reimbursement'),
+          h('div', { style: { display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'stretch' } },
+            scenarioCard('If this item is Out of Network', C.teal, [
+              h('div', { style: { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', margin: '10px 0 12px' } },
+                h('span', { style: { fontSize: 11.5, color: C.inkSoft, display: 'inline-flex', alignItems: 'center', gap: 5 } }, 'Select your plan\u2019s reimbursement rate',
+                  h('button', { onClick: () => setUcrOpen(o => !o), 'aria-expanded': ucrOpen, 'aria-label': 'What does UCR mean?',
+                    style: { flexShrink: 0, width: 18, height: 18, display: 'grid', placeItems: 'center', fontSize: 11, fontWeight: 800, color: ucrOpen ? '#fff' : C.purple, background: ucrOpen ? C.purple : '#fff', border: '1.5px solid ' + C.purple, borderRadius: 999, cursor: 'pointer', fontFamily: FONT, padding: 0 } }, '?')),
+                stepper(rates.oon + '%', () => stepRate('oon', -1), () => stepRate('oon', 1), rates.oon <= 0, rates.oon >= 100, { minWidth: 56 }, 'out-of-network reimbursement rate')),
+              ucrOpen && h('div', { style: { marginBottom: 12, border: '1px solid ' + C.line, background: '#F7F8FC', padding: '10px 12px', fontSize: 12, lineHeight: 1.5 } },
+                h('strong', null, 'UCR \u2014 Usual, Customary and Reasonable. '),
+                'Out of network, many plans reimburse a percentage of what providers in your area typically charge. You owe the rest of the provider\u2019s billed charge.'),
+              h('div', { style: { border: '1px solid ' + C.line, padding: '10px 14px' } },
+                rLine('Typical provider billed charge', '(' + pct + 'th pct)', fmt(billed)),
+                rLine('Typical plan pays', '(' + rates.oon + '% of UCR)', '\u2212 ' + fmt(payOon), { color: C.green }),
+                h('div', { style: { borderTop: '1px solid ' + C.ink, margin: '8px 0' } }),
+                rLine('Your typical out-of-pocket', null, fmt(oopOon), { total: true }))])),
+
+          h('div', { style: { fontSize: 11, color: C.ink, marginTop: 12, lineHeight: 1.5 } },
+            '\u201cTypical\u201d means common plan provisions, not your plan. Your deductible, out-of-pocket max, and coverage terms will change these numbers. Closing this calculator discards these settings; it never changes the results page.')));
+    }
+
+    /* ══════════ Production-style page (left as-is apart from the two insertions) ══════════ */
+    function App() {
+      const [percentile, setPercentile] = useState(60);
+      const [modalItemId, setModalItemId] = useState(null);
+      const triggerRef = useRef(null); // element to restore focus to on close
+      const [helpOpen, setHelpOpen] = useState(null); // key of the open header help popover
+      useEffect(() => {
+        if (!helpOpen) return;
+        const outside = (e) => { if (!e.target.closest('[data-help]')) setHelpOpen(null); };
+        const esc = (e) => {
+          if (e.key !== 'Escape') return;
+          const btn = document.getElementById('help-btn-' + helpOpen);
+          setHelpOpen(null);
+          if (btn) btn.focus();
+        };
+        document.addEventListener('mousedown', outside); document.addEventListener('touchstart', outside);
+        document.addEventListener('keydown', esc);
+        return () => { document.removeEventListener('mousedown', outside); document.removeEventListener('touchstart', outside); document.removeEventListener('keydown', esc); };
+      }, [helpOpen]);
+
+      const openCalc = (e, id) => { triggerRef.current = e.currentTarget; setModalItemId(id); };
+      const closeCalc = () => {
+        setModalItemId(null);
+        if (triggerRef.current) triggerRef.current.focus();
+      };
+      const modalItem = ALL_ITEMS.find(i => i.id === modalItemId);
+
+      // The compact per-row trigger — the single approved insertion per item.
+      const calcTrigger = (item) => item.billedByPct && h('button', {
+        onClick: (e) => openCalc(e, item.id), 'aria-haspopup': 'dialog',
+        'aria-label': 'Open the cost calculator for ' + item.name,
+        style: { display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 700, color: C.purple, background: 'none', border: 'none', padding: '4px 0', marginTop: 4, cursor: 'pointer', fontFamily: FONT, textDecoration: 'underline', textUnderlineOffset: 3 } },
+        h(CalcIcon, { size: 14, color: C.purple }), 'Cost Calculator');
+
+      const row = (item, control) => {
+        const na = !item.billedByPct;
+        return h('div', { key: item.id, style: { display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 18px', background: '#fff', borderBottom: '1px solid #EDEEF5' } },
+          h('div', { style: { width: 78, flexShrink: 0, paddingTop: 2 } }, control),
+          h('div', { style: { flex: 1, minWidth: 0, opacity: na ? 0.55 : 1 } },
+            h('div', { style: { fontSize: 14.5, fontWeight: 700 } }, item.name),
+            h('div', { style: { fontSize: 12.5, color: C.inkSoft, marginTop: 3, lineHeight: 1.45 } }, item.desc),
+            item.cpt && h('div', { style: { fontSize: 12.5, fontWeight: 700, marginTop: 6 } }, 'CPT Code: ' + item.cpt),
+            calcTrigger(item)),
+          prodBox(na ? 'N/A' : fmt(item.billedByPct[percentile]), 'billed', na),
+          prodBox(na ? 'N/A' : fmt(item.allowedByPct[percentile]), 'allowed', na),
+          prodBox(fmtN(item.medicare), 'medicare', item.medicare == null));
+      };
+      const removeBtn = h('span', { style: { display: 'inline-block', fontSize: 12.5, fontWeight: 600, color: C.green, border: '1.5px solid ' + C.green, borderRadius: 6, padding: '5px 12px', background: '#fff' } }, 'Remove');
+      const radio = (on) => h('span', { style: { display: 'inline-flex', width: 18, height: 18, borderRadius: 999, border: '2px solid ' + (on ? C.green : C.inkSoft), alignItems: 'center', justifyContent: 'center' } }, on && h('span', { style: { width: 9, height: 9, borderRadius: 999, background: C.green } }));
+
+      const includedTotals = ALL_ITEMS.filter(i => i.billedByPct && i.id !== 'asc');
+      const billedTotal = includedTotals.reduce((s, i) => s + i.billedByPct[percentile], 0);
+      const allowedTotal = includedTotals.reduce((s, i) => s + i.allowedByPct[percentile], 0);
+      const medicareTotal = includedTotals.reduce((s, i) => s + (i.medicare || 0), 0);
+
+      return h('div', { style: { fontFamily: FONT, color: C.ink, minHeight: '100vh', display: 'flex', flexDirection: 'column' } },
+        h('div', { style: { display: 'flex', flex: 1, alignItems: 'stretch' } },
+          // Production frame: the thick purple band down the left edge
+          h('div', { 'aria-hidden': 'true', style: { width: 96, flexShrink: 0, background: C.purpleDeep } }),
+          h('div', { style: { flex: 1, minWidth: 0, padding: '24px 20px 120px' } },
+          h('div', { style: { maxWidth: 980, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 14 } },
+
+            // Header card with the approved slider addition
+            h('div', { style: { background: '#fff', borderRadius: 8, boxShadow: '0 1px 3px rgba(31,35,48,0.06)', padding: '18px 22px' } },
+             h('div', { style: { display: 'flex', gap: 28, flexWrap: 'wrap' } },
+              h('div', { style: { flex: '1 1 0', minWidth: 250 } },
+                h('div', { style: { fontSize: 15, fontWeight: 800, lineHeight: 1.35 } }, 'Fast Growing Prostate Cancer'),
+                h('div', { style: { fontSize: 15, fontWeight: 800, lineHeight: 1.35 } }, 'Surgery'),
+                h('div', { style: { fontSize: 15, fontWeight: 800, lineHeight: 1.35 } }, 'Open Surgery'),
+                h('div', { style: { fontSize: 15, fontWeight: 800, lineHeight: 1.35 } }, 'Outpatient'),
+                h('div', { style: { fontSize: 14, lineHeight: 1.35 } }, 'New York, NY 10036')),
+              h('div', { style: { flex: '0 1 50%', maxWidth: '50%', minWidth: 300 } },
+                h(PercentileSlider, { value: percentile, onChange: setPercentile }),
+                h('div', { style: { fontSize: 11.5, color: C.ink, lineHeight: 1.45, marginTop: 8 } },
+                  'Higher percentiles show what pricier providers in this area charge. Medicare prices come from a fixed fee schedule, so they don\u2019t change with the percentile.'))),
+             // Bottom row: page links left; column header cells right, aligned to the price columns below.
+             // Separated from the title/slider row by a 2px rule (#E8EAF6) with extra breathing room.
+             h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginTop: 16, paddingTop: 18, borderTop: '2px solid #E8EAF6' } },
+                h('div', { style: { display: 'flex', alignItems: 'center', gap: 18 } },
+                   h('a', { href: '#', onClick: (e) => e.preventDefault(),
+                     style: { display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 13.5, fontWeight: 600, color: C.purple, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer' } },
+                     h(RefreshIcon, { size: 14, color: C.purple }), 'Search Again'),
+                   h('a', { href: '#', onClick: (e) => { e.preventDefault(); window.print(); },
+                     style: { display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 13.5, fontWeight: 600, color: C.purple, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer' } },
+                     h(PrintIcon, { size: 14, color: C.purple }), 'Print')),
+              h('div', { style: { display: 'flex', gap: 14, flexWrap: 'wrap', marginRight: -4 } },
+                ...HELP.map(cfg => h(HeaderCell, { key: cfg.key, cfg, open: helpOpen === cfg.key, onToggle: () => setHelpOpen(o => (o === cfg.key ? null : cfg.key)) }))))),
+
+            // Production-style sections (layout untouched apart from the per-row trigger)
+            ...SECTIONS.map((sec, si) => h('div', { key: si, style: { background: '#fff', borderRadius: 8, boxShadow: '0 1px 3px rgba(31,35,48,0.06)', overflow: 'hidden' } },
+              sec.title && h('div', { style: { fontSize: 15.5, fontWeight: 700, color: C.purple, padding: '14px 18px', borderBottom: '2px solid #EDEEF5' } }, sec.title),
+              ...sec.items.map(item =>
+                item.id === 'asc' ? row(item, radio(false)) :
+                item.id === 'hosp' ? row(item, h('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' } }, radio(true), removeBtn)) :
+                item.id === 'primary' || item.id === 'anes' ? row(item, removeBtn) :
+                row(item, h('span', { style: { display: 'grid', placeItems: 'center', width: 26, height: 26, borderRadius: 5, background: '#5A5F73' } }, h(ChevronDown, { size: 15, color: '#fff' }))))))
+          ))),
+
+        // Production sticky bar (labels updated to the org-wide column terminology)
+        h('div', { style: { position: 'sticky', bottom: 0, background: C.purpleDeep, color: '#fff' } },
+          h('div', { style: { maxWidth: 980, margin: '0 auto', padding: '14px 22px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 18, flexWrap: 'wrap' } },
+            h('div', { style: { fontSize: 24, fontWeight: 800, alignSelf: 'center' } }, 'Total Cost'),
+            h('div', { 'aria-live': 'polite', style: { display: 'flex', gap: 11, flexWrap: 'wrap' } },
+              ...[['Provider Billed Charge', fmt(billedTotal), C.teal], ['In-Network Allowed Amount', fmt(allowedTotal), C.inn], ['Medicare Price', fmt(medicareTotal), 'outline']].map(([label, val, bg]) =>
+                h('div', { key: label, style: { width: 130, textAlign: 'center' } },
+                  h('div', { style: bg === 'outline' ? { background: '#fff', borderRadius: 6, padding: '9px 8px' } : { background: bg, borderRadius: 6, padding: '9px 8px' } },
+                    h('div', { style: { fontSize: 19, fontWeight: 800, color: bg === 'outline' ? C.purpleDeep : '#fff', fontVariantNumeric: 'tabular-nums' } }, val)),
+                  h('div', { style: { fontSize: 11, color: '#fff', marginTop: 5, whiteSpace: 'pre-line' } }, label))))
+          )),
+
+        // The modal, keyed so each open starts fresh
+        modalItem && h(CalculatorModal, { key: modalItem.id + ':' + percentile, item: modalItem, pagePct: percentile, onClose: closeCalc })
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+  </script>
+</body>
+</html>
