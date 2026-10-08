@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Age-Friendly Care — FAIR Health Consumer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/main.css">
+</head>
+
+<body class="afc-main">
+
+  <!-- ========== TOOLBAR ========== -->
+  <div class="toolbar">
+    <img src="../assets/images/toolbar.png" alt="FAIR Health Consumer navigation">
+  </div>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <div class="container" style="padding-bottom: 1.5rem;">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb section-spacing">
+      <a href="../index.html">Older Adults</a>
+      <span class="separator"> &rsaquo; </span>
+      <span class="current">Age Friendly Care</span>
+    </nav>
+
+    <!-- ========== SECTION: 4Ms of Age-Friendly Care ========== -->
+    <section class="afc-card section-spacing">
+      <div class="afc-card__body">
+        <h1>4Ms of Age-Friendly Care</h1>
+        <p>The 4Ms framework was created by the Institute for Healthcare Improvement and The John A. Hartford Foundation to help older adults get coordinated, higher-quality care.</p>
+        <p>The 4Ms include:</p>
+
+        <h2>What Matters</h2>
+        <p>Align your care with your goals, values and the kind of care or treatment you want to have. Share what is important to you with your healthcare provider and family caregiver.</p>
+
+        <h2>Medication</h2>
+        <p>Talk to your healthcare provider and caregiver about the prescription drugs you are taking and any side effects that affect your Mobility or your Mind (Mentation).</p>
+
+        <h2>Mind (Mentation)</h2>
+        <p>You are more at risk for mental health conditions like dementia, depression and delirium as you age. Share any changes in your memory or mood with your healthcare provider and caregiver. That way, you can treat any issues early.</p>
+
+        <h2>Mobility</h2>
+        <p>Work with your healthcare provider to create an exercise plan to help keep you flexible and mobile. It can also help you get around safely and stay active as you age.</p>
+      </div>
+
+      <div class="afc-card__figure">
+        <img src="../assets/images/4ms-age-friendly-care.png" alt="Diagram: the 4Ms of age-friendly care — What Matters, Medication, Mind and Mobility">
+      </div>
+    </section>
+
+    <!-- ========== BOTTOM ROW: Resources + Toolkit ========== -->
+    <div class="afc-bottom section-spacing">
+
+      <!-- Resources -->
+      <div class="afc-resources">
+        <div class="afc-resources__head">
+          <h2>Resources</h2>
+          <svg class="afc-resources__icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <circle cx="32" cy="14" r="4" fill="#2A9BB5"/>
+            <circle cx="16" cy="20" r="3" fill="#2A9BB5"/>
+            <circle cx="48" cy="20" r="3" fill="#2A9BB5"/>
+            <path d="M32 18v14M18 23l10 10M46 23L36 33" stroke="#2A9BB5" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 44c6-6 12-6 20-6s14 0 20 6" stroke="#2A9BB5" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M8 40c0 8 6 12 12 12h24c6 0 12-4 12-12" stroke="#2A9BB5" stroke-width="3" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <p>Use these resources to speak with your healthcare provider about age-friendly care:</p>
+        <ul>
+          <li><a href="https://www.johnahartford.org/grants-strategy/current-strategies/age-friendly/age-friendly-care" target="_blank" rel="noopener noreferrer">Age-Friendly Care &mdash; The John A. Hartford Foundation</a></li>
+        </ul>
+      </div>
+
+      <!-- FH Checklists and Toolkits -->
+      <div class="afc-toolkit">
+        <div class="afc-toolkit__head">
+          <svg class="print-icon" width="30" viewBox="0 0 53 45" fill="none" aria-hidden="true"><path d="M52.602 20.1884L48.72 15.1413H42.5093V10.0803L32.4282 0H10.0928V15.1401H3.88209L0 20.1872V36.1039H10.0924V44.8382H42.5097V36.1039H52.602V20.1887V20.1884ZM12.0343 1.9418H31.6255L32.0267 2.34295V10.482H40.1665L40.5677 10.8841V15.1401L12.0343 15.1398L12.0343 1.9418ZM40.5685 42.8974H12.0343V26.5928H40.5677V42.8974H40.5685ZM49.3027 30.4744H45.2274V26.3983H49.3027V30.4744Z" fill="white"/></svg>
+          <h2>FH<sup class="fh-reg">&reg;</sup> Checklists and Toolkits</h2>
+        </div>
+        <div class="afc-toolkit__body">
+          <div class="afc-toolkit__sub">Know what to ask your doctor. Print a checklist to bring along.</div>
+          <div class="afc-toolkit__label">Download and Print</div>
+
+          <div class="dropdown dropdown--purple" id="checklistDropdown">
+            <button class="dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span class="dropdown-label">Select Checklist</span>
+              <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2 4 6 8 10 4"/></svg>
+            </button>
+            <div class="dropdown-menu" role="listbox" aria-label="Checklist options">
+              <ul>
+                <li role="option" data-value="sdm">Shared Decision-Making Checklist for Patients</li>
+                <li role="option">Shared Decision-Making Checklist for Family Caregivers and Care Partners</li>
+                <li role="option" data-value="nav">Healthcare Navigation Checklist for Patients</li>
+                <li role="option">Healthcare Navigation Checklist for Family Caregivers and Care Partners</li>
+                <li role="option" data-value="provider">Choosing a Healthcare Provider: Questions to Ask</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="afc-toolkit__tags">
+            <button type="button" class="toolkit-tag" data-target="sdm">Shared Decision Making</button>
+            <button type="button" class="toolkit-tag" data-target="nav">Healthcare Navigation</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div class="footer-line">Prototype &middot; FAIR Health Consumer &middot; Age-Friendly Care</div>
+
+  </div>
+  <!-- end .container -->
+
+  <script src="../js/age-friendly-care.js"></script>
+</body>
+</html>

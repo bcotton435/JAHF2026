@@ -1,0 +1,15 @@
+{
+  "name": "fairhealth-older-adults",
+  "version": "1.0.0",
+  "description": "FAIR Health Consumer — Older Adults landing + Alzheimer's section. Static HTML + Bootstrap-Sass.",
+  "private": true,
+  "scripts": {
+    "build:css": "sass scss/main.scss assets/main.css --load-path=node_modules --style=compressed --no-source-map",
+    "watch:css": "sass --watch scss/main.scss:assets/main.css --load-path=node_modules",
+    "dev": "npm run watch:css"
+  },
+  "devDependencies": {
+    "bootstrap": "^5.3.3",
+    "sass": "^1.77.0"
+  }
+}

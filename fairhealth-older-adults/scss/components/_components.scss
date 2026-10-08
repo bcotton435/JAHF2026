@@ -1,0 +1,223 @@
+// =============================================================
+// FAIR Health · Components — reusable UI shared across pages
+// =============================================================
+
+// ---- Buttons / CTAs ----------------------------------------
+.btn-pill {
+  @include pill;
+  padding: 0.5rem 1.25rem;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  border: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+
+  &--purple { background: var(--purple);  &:hover { background: var(--purple-hover); color:#fff; text-decoration:none; } }
+  &--teal   { background: var(--teal);    &:hover { background: var(--teal-deep);    color:#fff; text-decoration:none; } }
+  &--orange { background: var(--orange);  &:hover { filter: brightness(0.94);        color:#fff; text-decoration:none; } }
+}
+
+// Hero side CTAs (used on the Alzheimer's main page)
+.hero-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: $fh-radius-pill;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.25;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s ease, transform 0.15s ease;
+
+  &:hover { text-decoration: none; transform: translateY(-1px); }
+  &--purple { background: var(--purple); &:hover { background: var(--purple-hover); color:#fff; } }
+  &--teal   { background: var(--teal);   &:hover { background: var(--teal-deep);    color:#fff; } }
+
+  .label { display: flex; flex-direction: column; line-height: 1.25; }
+  .arrow { flex-shrink: 0; width: 18px; height: 18px; }
+}
+
+// ---- Pills / chips -----------------------------------------
+.chip {
+  @include pill;
+  padding: 0.25rem 0.75rem;
+  font-size: 12px;
+  background: #F3F3F3;
+  color: var(--text-body);
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+  &:hover { background: #ECECEC; }
+
+  // Selected states by accent
+  &.is-selected--orange {
+    background: var(--orange-tint);
+    border-color: var(--orange);
+    color: var(--orange);
+  }
+  &.is-selected--purple {
+    background: var(--purple-tint);
+    border-color: var(--purple);
+    color: var(--purple);
+  }
+}
+
+// ---- Dropdown (shared with Alzheimer's pages) --------------
+.dropdown {
+  position: relative;
+  margin-bottom: 0.75rem;
+
+  &-trigger {
+    width: 100%;
+    background: #F3F3F3;
+    border: 1px solid var(--border-card);
+    border-radius: $fh-radius-input;
+    padding: 0.75rem 1rem;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--text-body);
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.15s ease;
+
+    &:hover, &:focus { border-color: var(--purple); outline: none; }
+
+    .chevron {
+      width: 14px; height: 14px;
+      color: var(--text-body);
+      transition: transform 0.15s ease;
+      flex-shrink: 0;
+    }
+  }
+
+  &.open .dropdown-trigger .chevron { transform: rotate(180deg); }
+
+  // Accent variants tint the open-border and chevron
+  &--orange.open .dropdown-trigger { border-color: var(--orange); }
+  &--purple.open .dropdown-trigger { border-color: var(--purple); }
+
+  &-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: #fff;
+    border: 1px solid var(--border-card);
+    border-radius: $fh-radius-input;
+    max-height: 280px;
+    overflow-y: scroll;
+    z-index: 50;
+    box-shadow: 0 8px 24px rgba(9,44,76,0.18);
+
+    // Always-visible scrollbar so it's clear the list scrolls.
+    scrollbar-width: thin;
+    scrollbar-color: #B8B8C4 #EFEFF3;
+    &::-webkit-scrollbar { width: 10px; }
+    &::-webkit-scrollbar-track { background: #EFEFF3; border-radius: 0; }
+    &::-webkit-scrollbar-thumb { background: #B8B8C4; border-radius: 5px; border: 2px solid #EFEFF3; }
+    &::-webkit-scrollbar-thumb:hover { background: #9A9AAA; }
+
+    ul { margin: 0; padding: 0; }
+    li {
+      list-style: none;
+      padding: 0.5rem 0.75rem;
+      font-size: 15px;
+      color: var(--text-body);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &::before { content: ""; width: 1rem; flex-shrink: 0; }
+      &.selected::before { content: "\2713"; font-weight: 700; }
+    }
+  }
+
+  &.open .dropdown-menu { display: block; }
+
+  // Per-accent selected/hover tints
+  &--orange .dropdown-menu li {
+    &:hover  { background: var(--orange-tint-hover); }
+    &.selected { background: var(--orange-tint); }
+    &.selected::before { color: var(--orange); }
+  }
+  &--purple .dropdown-menu li {
+    &:hover  { background: var(--purple-tint); }
+    &.selected { background: var(--purple-tint); }
+    &.selected::before { color: var(--purple); }
+  }
+}
+
+// ---- Toolkit banner (full-width horizontal) ----------------
+.toolkit-banner {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  color: #fff;
+  background: var(--purple);
+
+  @include tablet-down { flex-direction: column; }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: var(--purple-hover);
+
+    .print-icon { width: 40px; height: auto; flex-shrink: 0; }
+    .title { font-weight: 700; font-size: 22px; line-height: 1.1; }
+  }
+
+  &__copy {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    flex: 1;
+
+    .lead { font-weight: 700; font-size: 18px; margin-bottom: 0.25rem; }
+    .sub  { font-weight: 700; font-size: 13px; line-height: 1.2; }
+  }
+
+  &__action {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+    min-width: 380px;
+
+    @include tablet-down { min-width: 0; }
+
+    .dropdown-trigger { font-weight: 700; background: #fff; }
+  }
+
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+
+    &-label { font-size: 12px; font-weight: 600; margin-right: 0.25rem; }
+    &-chip {
+      font-size: 12px;
+      padding: 0.25rem 0.75rem;
+      border-radius: $fh-radius-pill;
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      border: 0.5px solid rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background 0.15s ease;
+      &:hover { background: rgba(255,255,255,0.28); }
+    }
+  }
+}

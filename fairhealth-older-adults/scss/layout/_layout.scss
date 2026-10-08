@@ -1,0 +1,46 @@
+// =============================================================
+// FAIR Health · Layout — shared structural pieces
+// =============================================================
+
+.container {
+  max-width: $fh-container-max;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section-spacing { margin-bottom: $fh-section-gap; }
+
+// ---- Toolbar (flush, full-bleed image bar) ----------------
+.toolbar {
+  background: #fff;
+  width: 100%;
+  border-bottom: 1px solid var(--border-card);
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: $fh-toolbar-max;
+    margin: 0 auto;
+  }
+}
+
+// ---- Breadcrumb -------------------------------------------
+.breadcrumb {
+  padding-top: 1.5rem;
+  font-size: 14px;
+  color: var(--text-body);
+  letter-spacing: 0.01em;
+
+  a { color: var(--purple); font-weight: 500; }
+  .separator { color: var(--grey); margin: 0 0.5rem; }
+  .current { color: var(--text-body); font-weight: 600; }
+}
+
+// ---- Footer line ------------------------------------------
+.footer-line {
+  text-align: center;
+  font-size: 13px;
+  color: var(--grey);
+  padding: 1.5rem 0 2.5rem;
+}

@@ -1,0 +1,82 @@
+// =============================================================
+// FAIR Health · Design Tokens (Sass)
+// Single source of truth for brand values. Mirrors the CSS
+// custom properties emitted in base/_tokens.scss so both the
+// Sass layer (Bootstrap overrides, mixins) and the runtime
+// custom-property layer stay in sync.
+// =============================================================
+
+// ---- Brand palette -----------------------------------------
+$fh-bg-page:          #E8EAF6;
+$fh-bg-card:          #FFFFFF;
+$fh-bg-sidebar:       #FAFAFB;
+
+$fh-text-body:        #141414;
+$fh-text-muted:       #555555;
+
+$fh-border-card:      #E5E5E5;
+$fh-border-elevated:  #D9D9D9;
+
+$fh-purple:           #3C3489;
+$fh-purple-hover:     #2E2870;
+$fh-purple-bright:    #4F4FAB;
+$fh-purple-tint:      #ECEAF4;
+$fh-purple-tint-hover:#E0DCEF;
+
+// FH Healthcare Toolkit — its own purples, distinct from the brand purple.
+$fh-toolkit-dark:     #362C66;   // header band
+$fh-toolkit-light:    #67608B;   // body/field
+
+$fh-teal:             #2A7F95;
+$fh-teal-eyebrow:     #0891B2;
+$fh-teal-deep:        #005F7D;
+$fh-cyan:             #0891B2;
+
+$fh-orange:           #D14A2D;
+$fh-orange-tint:      #FBE9E3;
+$fh-orange-tint-hover:#FDF5F2;
+
+$fh-green:            #488A3A;
+$fh-dental-orange:    #CA7617;
+
+$fh-grey:             #999999;
+$fh-grey-rule:        #E5E5E5;
+
+// ---- Layout ------------------------------------------------
+$fh-container-max:    72rem;       // 1152px (matches max-w-6xl)
+$fh-toolbar-max:      1222px;
+$fh-section-gap:      1.5rem;      // 24px rhythm between sections
+$fh-radius-card:      0;           // squared corners on cards
+$fh-radius-input:     0.25rem;     // 4px on inputs/dropdowns
+$fh-radius-pill:      9999px;
+
+// ---- Shadows -----------------------------------------------
+$fh-shadow-card:       0 1px 3px rgba(9,44,76,0.04), 0 4px 12px rgba(9,44,76,0.05);
+$fh-shadow-card-hover: 0 2px 6px rgba(9,44,76,0.06), 0 8px 20px rgba(9,44,76,0.08);
+
+// ---- Breakpoints (match existing pages) --------------------
+$fh-bp-tablet:        960px;
+$fh-bp-mobile:        600px;
+
+// ---- Type --------------------------------------------------
+$fh-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+// =============================================================
+// Bootstrap overrides — feed FH tokens into Bootstrap's own Sass
+// variables so generated utilities/components inherit the brand.
+// These are consumed before `@import "bootstrap"`.
+// =============================================================
+$primary:        $fh-purple;
+$secondary:      $fh-teal;
+$body-bg:        $fh-bg-page;
+$body-color:     $fh-text-body;
+$font-family-sans-serif: $fh-font-sans;
+$border-color:   $fh-border-card;
+
+// Map for any `theme-color()` usage
+$fh-theme-colors: (
+  "purple":  $fh-purple,
+  "teal":    $fh-teal,
+  "cyan":    $fh-cyan,
+  "orange":  $fh-orange,
+);

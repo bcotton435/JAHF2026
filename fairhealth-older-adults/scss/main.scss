@@ -1,0 +1,38 @@
+// =============================================================
+// FAIR Health · Older Adults — main stylesheet entry
+// Compile:  npm run build:css   (see package.json)
+//
+// Uses Sass's @import layering (Bootstrap 5.3 is @import-based).
+// Order matters: FH tokens + Bootstrap overrides FIRST so they
+// feed Bootstrap's variable cascade, then Bootstrap, then the
+// FH base/layout/component/page layers.
+// =============================================================
+
+// 1) FH Sass tokens + Bootstrap variable overrides
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+// 2) Bootstrap (only the layers this project uses)
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/utilities/api';
+
+// 3) FH base — emits CSS custom properties + resets/type
+@import 'base/tokens';
+
+// 4) FH shared layout + components
+@import 'layout/layout';
+@import 'components/components';
+
+// 5) FH page modules
+@import 'pages/landing';
+@import 'pages/alzheimers-main';
+@import 'pages/alzheimers-resources';
+@import 'pages/financial-literacy-main';
+@import 'pages/age-friendly-care';

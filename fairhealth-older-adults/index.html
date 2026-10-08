@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthy Decisions for Healthy Aging · FAIR Health Consumer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/main.css">
+</head>
+<body class="landing">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <img src="assets/images/toolbar.png" alt="FAIR Health Consumer navigation">
+  </div>
+
+  <div class="container" style="padding-top:1.5rem; padding-bottom:1.5rem;">
+
+    <!-- Hero -->
+    <section class="hero section-spacing">
+      <div class="hero__body">
+        <div class="hero__eyebrow">FAIR Health for Older Adults</div>
+        <h1 class="hero__title">Healthy Decisions for Healthy Aging</h1>
+        <p class="hero__lead">Find cost and care information in minutes, on your own or with a caregiver.</p>
+        <div class="hero__meta">
+          <div>
+            <div>With funding from</div>
+            <div class="hero__funder">The John A. Hartford Foundation</div>
+          </div>
+          <button type="button" class="hero__video">
+            <span class="play">
+              <svg viewBox="0 0 12 12" aria-hidden="true"><polygon points="3,2 10,6 3,10"/></svg>
+            </span>
+            <span>Watch: <span class="tool-name">How to use our tools</span><span class="duration">2 min</span></span>
+          </button>
+        </div>
+      </div>
+      <div class="hero__photo">
+        <img src="assets/images/hero-photo.png" alt="Older adult at a laptop">
+      </div>
+    </section>
+
+    <!-- Two-column layout: main + right rail -->
+    <div class="landing-layout">
+      <div class="landing-main">
+
+      <!-- Alzheimer's callout -->
+      <section class="callout section-spacing">
+      <div class="callout__photo">
+        <img src="assets/images/alzheimers.png" alt="Hands holding the hand of a person with Alzheimer's">
+      </div>
+      <div class="callout__body">
+        <div>
+          <h2 class="callout__title">Navigating Alzheimer's Care</h2>
+          <p class="callout__text">Access tools and resources to help you compare treatment options and plan for care.</p>
+        </div>
+      </div>
+      <div class="callout__links">
+        <div style="width:100%;">
+          <ul class="callout__list">
+            <li><a href="alzheimers/index.html">Alzheimer's Disease* Treatment Options for Shared Decision Making</a></li>
+            <li><a href="alzheimers/index.html">FH<sup class="fh-reg">&reg;</sup> Total Treatment Cost</a></li>
+            <li><a href="alzheimers/resources.html">Resources</a></li>
+          </ul>
+          <div class="callout__footnote">*Alzheimer's Disease and Related Dementias</div>
+          <a href="alzheimers/index.html" class="btn-pill btn-pill--teal">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tool cards -->
+    <section class="tool-grid section-spacing">
+
+      <!-- Shared Decision Making -->
+      <div class="tool-card tool-card--sdm">
+        <div class="tool-card__head">
+          <svg width="28" height="28" viewBox="0 0 1200 1200" fill="#D14A2D" aria-hidden="true"><path d="m952.92 560.52c-4.3477-3.7188-9.8828-5.7617-15.602-5.7578h-262.8v-96h262.68c6.3672 0 12.469-2.5312 16.973-7.0312 4.5-4.5 7.0273-10.605 7.0273-16.969v-255.84c0-6.3672-2.5273-12.473-7.0273-16.973-4.5039-4.5-10.605-7.0273-16.973-7.0273h-262.68v-98.043c0-9.5469-3.793-18.703-10.543-25.453-6.7539-6.7539-15.91-10.547-25.457-10.547h-76.559c-9.5469 0-18.707 3.793-25.457 10.547-6.75 6.75-10.543 15.906-10.543 25.453v97.922h-263.76c-5.7773 0.003907-11.359 2.0898-15.719 5.8789l-148.44 129.12c-5.1641 4.5547-8.125 11.109-8.125 18 0 6.8867 2.9609 13.441 8.125 18l148.44 127.2c4.3477 3.7188 9.8789 5.7617 15.598 5.7617h263.4v96h-263.28c-6.3633 0-12.469 2.5273-16.969 7.0273s-7.0312 10.605-7.0312 16.973v256.2c0 6.3633 2.5312 12.469 7.0312 16.969s10.605 7.0312 16.969 7.0312h263.28v224.4h-93.48c-17.148 0-32.996 9.1484-41.57 24-8.5742 14.852-8.5742 33.148 0 48 8.5742 14.852 24.422 24 41.57 24h336c17.148 0 32.996-9.1484 41.57-24 8.5742-14.852 8.5742-33.148 0-48-8.5742-14.852-24.422-24-41.57-24h-93.48v-224.4h262.68c5.7227 0 11.254-2.043 15.602-5.7617l149.04-128.16c5.168-4.5547 8.125-11.109 8.125-18 0-6.8867-2.957-13.441-8.125-18z"/></svg>
+          <h2>Shared Decision Making</h2>
+        </div>
+        <p class="tool-card__desc">See treatment options for your condition.</p>
+
+        <div class="dropdown dropdown--orange" id="conditionDropdown" data-sync="condition">
+          <button class="dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="dropdown-label">Select a Condition...</span>
+            <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2 4 6 8 10 4"/></svg>
+          </button>
+          <div class="dropdown-menu" role="listbox" aria-label="Condition options">
+            <ul>
+              <li role="option">Alzheimer's Disease Treatment Options</li>
+              <li role="option">Dialysis for People Who Are Seriously Ill</li>
+              <li role="option">Early-Stage Breast Cancer</li>
+              <li role="option">High-Risk Prostate Cancer</li>
+              <li role="option">Hip Osteoarthritis Nonsurgical Treatment Options</li>
+              <li role="option">Hip Replacement, Should I Have It?</li>
+              <li role="option">Nutrition Options for People Who Are Seriously Ill</li>
+              <li role="option">Low-Risk Prostate Cancer</li>
+              <li role="option">Spinal Stenosis</li>
+              <li role="option">Type 2 Diabetes</li>
+              <li role="option">Uterine Fibroids Treatment Options (Medications)</li>
+              <li role="option">Uterine Fibroids Treatment Options (Procedures)</li>
+              <li role="option">Ventilator for People Who Are Seriously Ill</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tool-card__actions">
+          <button type="button" class="btn-pill btn-pill--orange">Compare My Options</button>
+        </div>
+
+        <div class="tool-card__examples-label">Decision Examples</div>
+        <div class="tool-card__examples" data-chips="condition">
+          <button type="button" class="chip" data-accent="orange">Alzheimer's Disease Treatment Options</button>
+          <button type="button" class="chip" data-accent="orange">Type 2 Diabetes</button>
+          <button type="button" class="chip" data-accent="orange">Hip Replacement, Should I Have It?</button>
+          <button type="button" class="chip" data-accent="orange">Early-Stage Breast Cancer</button>
+        </div>
+      </div>
+
+      <!-- FH Total Treatment Cost -->
+      <div class="tool-card tool-card--cost">
+        <div class="tool-card__head">
+          <svg width="28" height="28" viewBox="0 0 1200 1200" fill="#3C3489" aria-hidden="true"><path d="m157.27 655.09h-89.457c-12.363 0-22.363 10-22.363 22.363v382.55c0 12.363 10 22.363 22.363 22.363h89.453c12.363 0 22.363-10 22.363-22.363l0.003907-382.73c-0.18359-12.363-10.184-22.184-22.363-22.184z"/><path d="m718.73 683.09s329.09-231.27 329.09-400c0-97.273-78.727-176-175.82-176-65.816 0-123.09 36.184-153.27 89.816-30-53.637-87.273-89.816-153.09-89.816-97.09 0-176 78.727-176 176 0 168.73 329.09 400 329.09 400zm-140-318c0-5.4531 4.5469-10 10-10h90v-90c0-5.4531 4.5469-10 10-10h60c5.4531 0 10 4.5469 10 10v90h90c5.4531 0 10 4.5469 10 10v60c0 5.4531-4.5469 10-10 10h-90v90c0 5.4531-4.5469 10-10 10h-60c-5.4531 0-10-4.5469-10-10v-90h-90c-5.4531 0-10-4.5469-10-10z"/><path d="m1125.1 825.45c-14.363-7.6367-30.91-8.9102-45.637-3.6367l-293.82 105.46c-14.184 7.8164-30.363 12.184-47.637 12.184h-168c-10 0-18.184-8.1836-18.184-18.184s8.1836-18.184 18.184-18.184h168c10.547 0 20.727-2.7266 29.453-7.2734 0.91016-0.72656 2-1.2734 3.0898-1.8164 13.453-8.1836 23.09-21.273 25.453-36.363 2.7266-16.547-1.6367-32.363-12.363-44.91-10.547-12.363-25.637-19.273-41.816-19.273h-132.36c-38 0-76-13.637-107.09-38.363-50.184-40.184-152-92.91-286.36-19.637v272.36c39.816 1.8164 108.91 11.273 201.09 47.453 99.453 38.91 205.27 48 306 26 103.27-22.363 257.27-68.184 405.09-158.73 12.363-7.6367 21.453-20.363 24.91-35.09 5.6367-24.727-5.8164-50-28-62z"/></svg>
+          <h2>FH<sup class="fh-reg">&reg;</sup> Total Treatment Cost</h2>
+        </div>
+        <p class="tool-card__desc">Estimate costs of care for chronic conditions and procedures</p>
+
+        <div class="zip-row">
+          <input type="text" class="zip-input" inputmode="numeric" maxlength="5" placeholder="Zip" id="zipInput">
+          <div class="dropdown dropdown--purple" id="procedureDropdown" data-sync="procedure">
+            <button class="dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span class="dropdown-label">Condition or Procedure</span>
+              <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2 4 6 8 10 4"/></svg>
+            </button>
+            <div class="dropdown-menu" role="listbox" aria-label="Procedure options">
+              <ul>
+                <li role="option">ADHD and Hyperkinetic Syndrome</li>
+                <li role="option">Alzheimer's Disease</li>
+                <li role="option">Asthma</li>
+                <li role="option">C-Section</li>
+                <li role="option">Cataract Surgery</li>
+                <li role="option">Colonoscopy</li>
+                <li role="option">COPD/Emphysema</li>
+                <li role="option">Covid-19 Hospitalization</li>
+                <li role="option">Covid-19 Hospitalization with Complexities</li>
+                <li role="option">Covid-19 Non-hospitalization</li>
+                <li role="option">Heart Failure</li>
+                <li role="option">Hip Replacement</li>
+                <li role="option">Hyperlipidemia</li>
+                <li role="option">Hypertensive Diseases</li>
+                <li role="option">Hysterectomy</li>
+                <li role="option">Knee Arthroscopy</li>
+                <li role="option">Knee Replacement</li>
+                <li role="option">Major Depression</li>
+                <li role="option">Rheumatoid Arthritis</li>
+                <li role="option">Type 1 Diabetes</li>
+                <li role="option">Vaginal Delivery</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-card__actions">
+          <button type="button" class="btn-pill btn-pill--purple">See My Estimate</button>
+        </div>
+
+        <div class="tool-card__examples-label">Procedure Examples</div>
+        <div class="tool-card__examples" data-chips="procedure">
+          <button type="button" class="chip" data-accent="purple">Knee Replacement</button>
+          <button type="button" class="chip" data-accent="purple">Hyperlipidemia</button>
+          <button type="button" class="chip" data-accent="purple">Colonoscopy</button>
+          <button type="button" class="chip" data-accent="purple">Asthma</button>
+          <button type="button" class="chip" data-accent="purple">C-Section</button>
+          <button type="button" class="chip" data-accent="purple">Alzheimer's Disease</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Insurance Basics -->
+    <section class="ib-section section-spacing">
+      <div class="ib-section__head">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#007CA3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <h3>Insurance Basics</h3>
+      </div>
+      <div class="ib-section__body">
+        <p class="ib-section__intro">
+          <a href="https://www.fairhealthconsumer.org/insurance-basics/home" target="_blank" rel="noopener noreferrer">Find all articles here</a>. You also can get started with the quick links below.
+        </p>
+        <div class="ib-section__cols">
+          <div class="ib-col">
+            <h4>Your Costs and Coverage</h4>
+            <ul>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/your-costs/managing-costs-for-day-programs" target="_blank" rel="noopener noreferrer">Managing Costs for Day Programs for the Elderly and Disabled Younger Adults</a></li>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/your-health-plan/health-insurance-in-retirement" target="_blank" rel="noopener noreferrer">Health Insurance in Retirement</a></li>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/your-costs/managing-costs-for-chronic-conditions" target="_blank" rel="noopener noreferrer">Managing Costs of Chronic Conditions</a></li>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/your-costs/preventive-care-and-wellness-services" target="_blank" rel="noopener noreferrer">Preventive Care and Wellness Services: Coverage and Costs</a></li>
+            </ul>
+          </div>
+          <div class="ib-col">
+            <h4>Healthcare Decision Making</h4>
+            <ul>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/shared-decision/shared-decision-making" target="_blank" rel="noopener noreferrer">Shared Decision Making</a></li>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/healthcare/how-to-speak-with-your-healthcare-provider-to-make-informed-healthcare-decisions" target="_blank" rel="noopener noreferrer">How to Speak with Your Healthcare Provider to Make Informed Healthcare Decisions</a></li>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/shared-decision/palliative-care-shared-decision-making" target="_blank" rel="noopener noreferrer">Palliative Care and Shared Decision Making</a></li>
+            </ul>
+
+            <h4>Dental Coverage and Costs</h4>
+            <ul>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/dental/dental-coverage-for-retirees" target="_blank" rel="noopener noreferrer">Dental Coverage for Retirees</a></li>
+              <li><a href="https://www.fairhealthconsumer.org/insurance-basics/dental/dental-plans" target="_blank" rel="noopener noreferrer">Dental Plans</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      </div><!-- /landing-main -->
+
+      <!-- Right rail -->
+      <aside class="landing-rail">
+
+        <!-- FH Checklists and Toolkits (vertical card) -->
+        <div class="rail-toolkit">
+          <div class="rail-toolkit__head">
+            <svg class="print-icon" width="32" viewBox="0 0 53 45" fill="none" aria-hidden="true"><path d="M52.602 20.1884L48.72 15.1413H42.5093V10.0803L32.4282 0H10.0928V15.1401H3.88209L0 20.1872V36.1039H10.0924V44.8382H42.5097V36.1039H52.602V20.1887V20.1884ZM12.0343 1.9418H31.6255L32.0267 2.34295V10.482H40.1665L40.5677 10.8841V15.1401L12.0343 15.1398L12.0343 1.9418ZM40.5685 42.8974H12.0343V26.5928H40.5677V42.8974H40.5685ZM49.3027 30.4744H45.2274V26.3983H49.3027V30.4744Z" fill="white"/></svg>
+            <div class="rail-toolkit__title">FH<sup class="fh-reg">&reg;</sup> Checklists and Toolkits</div>
+          </div>
+          <div class="rail-toolkit__body">
+            <div class="rail-toolkit__sub">Know what to ask your doctor. Print a checklist to bring along.</div>
+            <div class="rail-toolkit__label">Download and Print</div>
+            <div class="dropdown dropdown--purple" id="checklistDropdown">
+              <button class="dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                <span class="dropdown-label">Select Checklist</span>
+                <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2 4 6 8 10 4"/></svg>
+              </button>
+              <div class="dropdown-menu" role="listbox" aria-label="Checklist options">
+                <ul>
+                  <li role="option" data-value="sdm">Shared Decision-Making Checklist for Patients</li>
+                  <li role="option">Shared Decision-Making Checklist for Family Caregivers and Care Partners</li>
+                  <li role="option" data-value="nav">Healthcare Navigation Checklist for Patients</li>
+                  <li role="option">Healthcare Navigation Checklist for Family Caregivers and Care Partners</li>
+                  <li role="option" data-value="provider">Choosing a Healthcare Provider: Questions to Ask</li>
+                </ul>
+              </div>
+            </div>
+            <div class="jump">
+              <button type="button" class="jump-chip" data-target="sdm">Shared Decision Making</button>
+              <button type="button" class="jump-chip" data-target="nav">Healthcare Navigation</button>
+              <button type="button" class="jump-chip" data-target="provider">Choosing a Provider</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Age-Friendly Care -->
+        <div class="rail-agefriendly">
+          <h3>Age-Friendly Care</h3>
+          <img class="rail-agefriendly__figure" src="assets/images/4ms-age-friendly-care.png" alt="" aria-hidden="true">
+          <p>Age-friendly care is healthcare that considers your unique needs, goals and values.</p>
+          <p>It can help you stay healthy and have a better quality of life as you age.</p>
+          <a href="age-friendly-care/index.html" class="btn-pill btn-pill--teal rail-agefriendly__cta">Learn More</a>
+        </div>
+
+        <!-- Financial Health Literacy Guide (vertical card) -->
+        <div class="rail-financial">
+          <div class="rail-financial__header">
+            <img class="rail-financial__icon" src="assets/images/money_icon.png" alt="" aria-hidden="true">
+            <h3>Financial Health Literacy Guide</h3>
+          </div>
+          <p>Get step-by-step help with choosing coverage, understanding costs and handling bills.</p>
+          <a href="financial-literacy/index.html" class="btn-pill btn-pill--teal rail-financial__cta">Explore the Guide</a>
+        </div>
+
+        <!-- Resources for Older Adults and Their Caregivers -->
+        <div class="rail-resources">
+          <h3>Resources for Older Adults and Their Caregivers</h3>
+          <p>Find organizations and websites for help with your coverage or to locate a healthcare provider.</p>
+          <a href="alzheimers/resources.html" class="btn-pill btn-pill--teal rail-resources__cta">Browse Resources</a>
+        </div>
+
+        <!-- Estimate Costs in Your Area -->
+        <div class="rail-costs">
+          <h3>Estimate Costs in Your Area</h3>
+          <a class="rail-costs__tool" href="#" aria-label="FH Medical Cost Lookup Tool">
+            <svg width="34" height="34" viewBox="0 0 70 70" fill="none" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="#488A3A"/><path d="M34.95,12.94c4.24,5.74,11.03,9.47,18.7,9.47.82,0,1.64-.04,2.45-.13-.84,8.21-3.25,15.72-6.81,21.92-3.7,6.46-8.64,11.5-14.35,14.39-5.71-2.89-10.65-7.94-14.36-14.4-3.56-6.2-5.97-13.71-6.81-21.92.81.09,1.63.13,2.45.13,7.67,0,14.47-3.72,18.71-9.47Z" fill="#fff" stroke="#fff" stroke-width="3.24"/><path fill-rule="evenodd" d="M31.52,23.5h7.76v7.81h7.82v7.77h-7.82v7.81h-7.76v-7.81h-7.82v-7.77h7.82v-7.81Z" fill="#488A3A"/></svg>
+            <span>FH<sup class="fh-reg">&reg;</sup> Medical Cost Lookup Tool</span>
+          </a>
+          <a class="rail-costs__tool" href="#" aria-label="FH Dental Cost Lookup Tool">
+            <svg width="34" height="34" viewBox="0 0 70 70" fill="none" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="#CA7617"/><path d="M53 24.9363C53 27.4305 52.1386 29.4293 51.2315 31.5428C50.3243 33.6454 49.395 35.8225 49.276 38.5757C49.2531 39.0943 49.2363 39.641 49.2135 40.2C48.9868 46.6397 48.6694 55.4581 43.6469 55.9939C43.6301 56 43.6133 56 43.5904 56C42.5818 56 41.6632 52.7227 40.9208 50.0905C39.6116 45.4022 38.1208 40.0852 34.0793 39.9587C34.0679 39.9587 34.0054 39.9533 33.9832 39.9533L33.9153 39.9587C29.8739 40.0852 28.3884 45.4022 27.0738 50.0905C26.3314 52.7227 27.6716 54.8684 24.4042 56C24.3874 56 24.3645 56 24.3477 55.9945C19.3258 55.4588 19.0085 46.6404 18.7812 40.2007C18.7583 39.6362 18.7415 39.095 18.7186 38.5764C18.605 35.8232 17.6703 33.6454 16.7632 31.5435C15.856 29.4293 15 27.4305 15 24.937C15 19.4581 19.3817 15 24.7774 15C24.9986 15 25.2084 15.0116 25.4122 15.0287C27.6965 15.3683 33.8749 18.3408 37.5707 20.3279C37.6951 20.397 37.8316 20.4257 37.9674 20.4257C38.2734 20.4257 38.5686 20.2589 38.7213 19.9651C38.9364 19.5449 38.7838 19.0207 38.3642 18.8014C37.8935 18.5479 36.9191 18.0292 35.6946 17.4135C36.868 17.1662 37.8484 16.7049 38.8006 16.2443C40.1388 15.6047 41.403 15 43.2226 15C48.6129 15 53 19.4581 53 24.9363Z" fill="white"/></svg>
+            <span>FH<sup class="fh-reg">&reg;</sup> Dental Cost Lookup Tool</span>
+          </a>
+        </div>
+
+      </aside><!-- /landing-rail -->
+    </div><!-- /landing-layout -->
+
+    <div class="footer-line">Prototype · FAIR Health Consumer · Older Adults</div>
+
+  </div>
+
+  <script src="js/landing.js"></script>
+</body>
+</html>

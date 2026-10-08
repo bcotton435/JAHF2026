@@ -1,0 +1,32 @@
+// =============================================================
+// FAIR Health · Mixins
+// =============================================================
+
+// Max-width breakpoint helpers matching the existing pages.
+@mixin tablet-down {
+  @media (max-width: $fh-bp-tablet) { @content; }
+}
+@mixin mobile-down {
+  @media (max-width: $fh-bp-mobile) { @content; }
+}
+
+// Desktop-up (single-project landing uses 768px like the React prototype)
+@mixin md-up {
+  @media (min-width: 768px) { @content; }
+}
+
+// Pill/chip base
+@mixin pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: $fh-radius-pill;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+// Card base — squared corners, hairline border
+@mixin card {
+  background: $fh-bg-card;
+  border: 1px solid $fh-border-card;
+  border-radius: $fh-radius-card;
+}

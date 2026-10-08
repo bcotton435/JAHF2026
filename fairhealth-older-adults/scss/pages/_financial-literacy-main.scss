@@ -1,0 +1,223 @@
+// =============================================================
+// FAIR Health · Page — Financial Health Literacy (single page)
+// Rules are already scoped under .fhl-main in the source.
+// =============================================================
+
+/* =========================================================
+       Financial Health Literacy — consolidated long-form page.
+       Page-specific CSS scoped under .fhl-main so it can't
+       collide with other pages when merged into the main repo.
+       Uses FH tokens (purple #3C3489, teal/cyan, finance blue
+       #007CA3, lavender #E8EAF6, squared cards, Inter).
+       ========================================================= */
+
+    .fhl-main { color: var(--text-body); }
+
+    /* ---- Title card (header) ---- */
+    .fhl-main .page-head {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      padding: 1.75rem 2rem;
+    }
+    .fhl-main .page-head__top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .fhl-main .page-head__icon {
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+    .fhl-main .page-head__title {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0;
+      color: var(--text-body);
+    }
+
+    /* ---- Section anchor tabs ---- */
+    .fhl-main .section-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 2rem;
+      margin-top: 1.5rem;
+    }
+    .fhl-main .section-tabs a {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--teal);
+      padding: 2px 0;
+      transition: color .15s ease;
+    }
+    .fhl-main .section-tabs a:hover {
+      color: var(--teal-deep);
+      text-decoration: underline;
+    }
+    /* First tab is the "current" section — boxed like the mockup */
+    .fhl-main .section-tabs a.is-current {
+      color: var(--text-body);
+      font-weight: 600;
+      border: 1px solid var(--border-card);
+      border-radius: 4px;
+      padding: 10px 16px;
+    }
+    .fhl-main .section-tabs a.is-current:hover {
+      text-decoration: none;
+      color: var(--text-body);
+    }
+
+    /* ---- Content section cards ---- */
+    .fhl-main .content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      padding: 2rem 2.25rem;
+    }
+    .fhl-main .content-card h2 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      margin: 0 0 1.25rem;
+      color: var(--text-body);
+    }
+    /* sub-headings within a section */
+    .fhl-main .content-card h3 {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 1.75rem 0 0.75rem;
+      color: var(--text-body);
+    }
+    .fhl-main .content-card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      font-style: italic;
+      line-height: 1.4;
+      margin: 1.5rem 0 0.5rem;
+      color: var(--text-body);
+    }
+    .fhl-main .content-card p {
+      font-size: 17px;
+      line-height: 1.6;
+      margin: 0 0 1rem;
+      color: var(--text-body);
+    }
+    .fhl-main .content-card p:last-child { margin-bottom: 0; }
+    .fhl-main .content-card a {
+      color: var(--purple);
+      font-weight: 600;
+      text-decoration: underline;
+      text-decoration-color: var(--purple);
+    }
+    .fhl-main .content-card a:hover {
+      color: var(--purple-hover);
+      text-decoration-color: var(--purple-hover);
+    }
+    .fhl-main .content-card strong { font-weight: 700; }
+
+    /* callout line (e.g. "If you are about to turn 65...") */
+    .fhl-main .content-card .callout-line {
+      font-weight: 700;
+      margin-top: 0.25rem;
+    }
+
+    /* bulleted resource / link lists */
+    .fhl-main .content-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1rem;
+    }
+    .fhl-main .content-card ul li {
+      position: relative;
+      padding-left: 1.25rem;
+      margin-bottom: 0.85rem;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text-body);
+    }
+    .fhl-main .content-card ul li:last-child { margin-bottom: 0; }
+    .fhl-main .content-card ul li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+    /* nested sub-bullets */
+    .fhl-main .content-card ul ul {
+      margin: 0.6rem 0 0;
+    }
+    .fhl-main .content-card ul ul li::before {
+      background: var(--teal);
+    }
+
+    /* hero illustration (right of intro section) */
+    .fhl-main .content-card.has-figure {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 2rem;
+      align-items: start;
+    }
+    .fhl-main .content-card.has-figure .figure {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fhl-main .content-card.has-figure .figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* hairline divider between sub-topics inside a card */
+    .fhl-main .content-card .rule {
+      border: 0;
+      border-top: 1px solid var(--grey-rule);
+      margin: 1.75rem 0;
+    }
+
+    /* survey footer prompt */
+    .fhl-main .survey {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      padding: 1.5rem 2.25rem;
+      text-align: center;
+    }
+    .fhl-main .survey p {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      color: var(--text-body);
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .fhl-main .page-head { padding: 1.5rem; }
+      .fhl-main .page-head__title { font-size: 26px; }
+      .fhl-main .page-head__icon { width: 42px; height: 42px; }
+      .fhl-main .content-card { padding: 1.5rem; }
+      .fhl-main .content-card.has-figure {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+      .fhl-main .content-card.has-figure .figure {
+        order: -1;
+      }
+      .fhl-main .section-tabs { gap: 0.5rem 1.25rem; }
+    
+  /* Intro paragraph above the first section heading */
+  .lead-intro {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-body, #141414);
+    margin: 0 0 1.5rem;
+  }
+}

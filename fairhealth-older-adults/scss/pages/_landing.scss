@@ -1,0 +1,307 @@
+// =============================================================
+// FAIR Health · Page — Older Adults landing
+// =============================================================
+
+.landing {
+
+  // ---- Hero -----------------------------------------------
+  .hero {
+    @include card;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+
+    @include tablet-down { flex-direction: column; }
+
+    &__body { flex: 1; padding: 2rem; }
+    &__eyebrow { font-size: 14px; font-weight: 500; color: var(--cyan); margin-bottom: 0.5rem; }
+    &__title {
+      font-size: 36px; font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.02em; color: var(--text-body); margin: 0 0 0.75rem;
+      @include mobile-down { font-size: 26px; }
+    }
+    &__lead { font-size: 18px; color: var(--text-body); margin: 0 0 2rem; }
+
+    &__meta { display: flex; flex-direction: row; align-items: center; gap: 1.5rem; font-size: 14px;
+      @include tablet-down { flex-direction: column; align-items: flex-start; gap: 0.75rem; } }
+    &__funder { font-weight: 600; }
+
+    &__video {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1rem; border: 1px solid var(--cyan);
+      border-radius: $fh-radius-pill; background: #fff; cursor: pointer;
+      .play { width: 2rem; height: 2rem; border-radius: 50%; background: var(--cyan);
+        display: flex; align-items: center; justify-content: center; }
+      .play svg { width: 12px; height: 12px; fill: #fff; }
+      .tool-name { font-weight: 700; color: var(--purple); }
+      .duration { margin-left: 0.75rem; }
+    }
+
+    &__photo {
+      width: 360px; flex-shrink: 0; background: var(--bg-sidebar); overflow: hidden;
+      @include tablet-down { width: 100%; height: 11rem; }
+      img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    }
+  }
+
+  // ---- Alzheimer's callout --------------------------------
+  .callout {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    background: #F3F3F3;
+    border: 1px solid var(--border-card);
+    overflow: hidden;
+
+    @include tablet-down { flex-direction: column; }
+
+    &__photo {
+      width: 202px; flex-shrink: 0; background: var(--teal); overflow: hidden;
+      @include tablet-down { width: 100%; height: 8rem; }
+      img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    }
+    &__body { display: flex; align-items: center; padding: 1.25rem 1.5rem; flex: 1 1 240px; min-width: 0;
+      @include tablet-down { align-items: flex-start; flex: 0 0 auto; padding-bottom: 0.5rem; } }
+    &__title { font-size: 22px; font-weight: 700; line-height: 1.2; margin: 0 0 0.5rem; }
+    &__text  { font-size: 15px; line-height: 1.5; max-width: 340px; margin: 0; }
+
+    &__links { display: flex; align-items: center; padding: 1.25rem 1.5rem; flex: 0 1 280px; min-width: 220px;
+      @include tablet-down { min-width: 0; align-items: flex-start; padding-top: 0.5rem; } }
+    &__list {
+      list-style: none; margin: 0 0 0.75rem; padding: 0;
+      font-size: 15px; font-weight: 700; line-height: 1.4; color: #362C67;
+      li a { color: #362C67; &:hover { text-decoration: underline; } }
+      li + li { margin-top: 0.4rem; }
+    }
+    &__footnote { font-size: 12px; color: var(--text-body); margin: 0 0 0.75rem; }
+  }
+
+  // ---- Tool cards -----------------------------------------
+  .tool-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    @include tablet-down { grid-template-columns: 1fr; }
+  }
+  .tool-card {
+    background: #fff; padding: 1.5rem; position: relative;
+    &--sdm { border-left: 6px solid var(--orange); }
+    &--cost { border-left: 6px solid var(--purple); }
+
+    &__head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+      svg { flex-shrink: 0; } h2 { font-size: 20px; font-weight: 700; margin: 0; } }
+    &__desc { font-size: 14px; margin: 0 0 1rem; }
+    &__actions { display: flex; justify-content: flex-end; }
+    &__examples-label { font-weight: 700; font-size: 14px; margin: 1.25rem 0 0.5rem; }
+    &--sdm  .tool-card__examples-label { color: var(--orange); }
+    &--cost .tool-card__examples-label { color: var(--purple); }
+    &__examples { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .zip-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; align-items: stretch; }
+    .zip-input {
+      width: 76px; flex-shrink: 0; background: #F3F3F3;
+      border: 1px solid var(--border-card); border-radius: $fh-radius-input;
+      padding: 0.75rem 1rem; font-size: 15px; line-height: 1.5; font-family: inherit; outline: none;
+      &:focus { border-color: var(--purple); }
+    }
+    .zip-row .dropdown { flex: 1; margin-bottom: 0; }
+    // Keep the trigger label on one line so the field height matches the SDM dropdown.
+    .zip-row .dropdown-label {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+  }
+
+  // ---- Bottom two cards -----------------------------------
+  .bottom-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    @include tablet-down { grid-template-columns: 1fr; }
+  }
+  .info-card {
+    @include card;
+    padding: 1.5rem;
+    h3 { font-size: 18px; font-weight: 700; margin: 0 0 0.75rem; }
+
+    .tool-row { display: flex; align-items: center; gap: 0.75rem;
+      .name { font-weight: 700; color: var(--purple); font-size: 18px; line-height: 1.25; } }
+    .tool-row + .tool-row { padding-top: 50px; }
+
+    &__header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.75rem;
+      svg { flex-shrink: 0; } }
+    p { font-size: 14px; line-height: 1.5; margin: 0 0 1rem; }
+    .guide-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  }
+
+  // ---- Two-column layout: main + right rail ---------------
+  .landing-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 1.5rem;
+    align-items: start;
+    @include tablet-down { grid-template-columns: 1fr; }
+  }
+  .landing-main {
+    min-width: 0;
+    > .section-spacing:last-child { margin-bottom: 0; }
+  }
+  .landing-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    @include tablet-down { /* drops below main on mobile */ }
+  }
+
+  // Cost-tools side by side (was stacked) to fit the wider full-row card
+  .cost-tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 3rem;
+    .tool-row { padding-top: 0 !important; }
+  }
+
+  // ---- Rail: FH Healthcare Toolkit (vertical) -------------
+  .rail-toolkit {
+    background: var(--toolkit-light);
+    color: #fff;
+    &__head {
+      background: var(--toolkit-dark);
+      padding: 1.25rem 1.25rem;
+      display: flex; align-items: center; gap: 0.85rem;
+      .print-icon { width: 32px; height: auto; flex-shrink: 0; }
+    }
+    &__title { font-weight: 700; font-size: 20px; line-height: 1.15; }
+    &__body { padding: 1.25rem; }
+    &__sub { font-weight: 700; font-size: 15px; line-height: 1.3; margin-bottom: 1rem; }
+    &__label { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.5rem; opacity: 0.95; }
+
+    .dropdown { margin-bottom: 0.85rem; }
+    .dropdown-trigger { background: #fff; font-weight: 600; }
+
+    .jump {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;
+      .jump-chip {
+        font-size: 12px; padding: 0.3rem 0.85rem; border-radius: $fh-radius-pill;
+        background: rgba(255,255,255,0.18); color: #fff;
+        border: 0.5px solid rgba(255,255,255,0.5); cursor: pointer;
+        transition: background 0.15s ease;
+        &:hover { background: rgba(255,255,255,0.28); }
+        &:nth-child(2) { align-self: center; }
+        &:nth-child(3) { align-self: flex-end; }
+      }
+    }
+  }
+
+  // ---- Rail: Financial Health Literacy Guide --------------
+  .rail-financial {
+    @include card;
+    padding: 1.25rem 1.5rem;
+
+    &__header {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      h3 { font-size: 19px; font-weight: 700; line-height: 1.2; margin: 0; }
+    }
+    &__icon { width: 44px; height: auto; flex-shrink: 0; }
+
+    p { font-size: 15px; line-height: 1.5; margin: 0 0 1rem; }
+
+    &__cta { display: block; width: fit-content; margin-left: auto; }
+  }
+
+  // ---- Rail: Age-Friendly Care -----------------------------
+  .rail-agefriendly {
+    @include card;
+    padding: 1.25rem 1.5rem;
+
+    h3 { font-size: 19px; font-weight: 700; line-height: 1.2; margin: 0 0 0.5rem; color: var(--purple); }
+
+    // Diagram floats right so the opening copy wraps beside it.
+    &__figure {
+      float: right;
+      width: 118px;
+      height: auto;
+      margin: 0 0 0.5rem 0.75rem;
+      shape-outside: circle(50%);
+    }
+
+    p {
+      font-size: 15px; line-height: 1.5; margin: 0 0 0.75rem;
+      &:last-of-type { margin-bottom: 1rem; }
+    }
+
+    &__cta {
+      display: inline-block;
+      float: right;      // sits bottom-right, per the design
+      margin-top: 0.25rem;
+    }
+
+    // Contain the floats so the card wraps its content.
+    &::after { content: ""; display: block; clear: both; }
+  }
+
+  // ---- Rail: Resources for Older Adults --------------------
+  .rail-resources {
+    @include card;
+    padding: 1.25rem 1.5rem;
+
+    h3 { font-size: 19px; font-weight: 700; line-height: 1.2; margin: 0 0 0.75rem; color: var(--purple); }
+    p { font-size: 15px; line-height: 1.5; margin: 0 0 1rem; }
+    &__cta { display: block; width: fit-content; margin-left: auto; }
+  }
+
+  // ---- Insurance Basics (wide section, main column) --------
+  .ib-section {
+    @include card;
+    padding: 0;
+
+    &__head {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-card);
+      svg { flex-shrink: 0; }
+      h3 { font-size: 20px; font-weight: 700; color: var(--text-body); margin: 0; }
+    }
+
+    &__body { padding: 1.5rem; }
+
+    &__intro {
+      font-size: 15px; line-height: 1.5; margin: 0 0 1.5rem;
+      a { color: var(--purple); font-weight: 700; &:hover { text-decoration: underline; } }
+    }
+
+    &__cols {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.5rem;
+      @include tablet-down { grid-template-columns: 1fr; }
+    }
+  }
+
+  .ib-col {
+    h4 {
+      font-size: 15px; font-weight: 700; font-style: italic;
+      color: var(--text-body); margin: 0 0 0.85rem;
+    }
+    h4 + ul + h4 { margin-top: 1.5rem; }
+
+    ul { list-style: none; margin: 0; padding: 0; }
+    li { margin-bottom: 0.85rem; &:last-child { margin-bottom: 0; } }
+    li a {
+      color: var(--purple); font-weight: 700; font-size: 15px; line-height: 1.35;
+      text-decoration: none;
+      &:hover { color: var(--purple-hover); text-decoration: underline; }
+    }
+  }
+
+  // ---- Rail: Estimate Costs in Your Area -------------------
+  .rail-costs {
+    @include card;
+    padding: 1.25rem 1.5rem;
+
+    h3 { font-size: 19px; font-weight: 700; line-height: 1.2; margin: 0 0 1rem; }
+
+    &__tool {
+      display: flex; align-items: center; gap: 0.75rem;
+      text-decoration: none;
+      svg { flex-shrink: 0; }
+      span { font-weight: 700; color: var(--purple); font-size: 16px; line-height: 1.25; }
+      & + .rail-costs__tool { margin-top: 1rem; }
+      &:hover span { text-decoration: underline; }
+    }
+  }
+}
